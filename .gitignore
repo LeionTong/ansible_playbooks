@@ -1,5 +1,6 @@
-files/*
-*.gz
-*.tgz
-*.zip
+# .gitignore for ansible-playbook
 *.retry
+roles/*/files/*
+# *.gz
+# *.tgz
+# *.zip
