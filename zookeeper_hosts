@@ -1,0 +1,4 @@
+[zookeeper_servers]
+10.0.0.11:22 myid=1
+10.0.0.12:22 myid=2
+10.0.0.13:22 myid=3

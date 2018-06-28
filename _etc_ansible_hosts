@@ -1,0 +1,4 @@
+[remote_servers]
+10.0.0.11:22 ansible_user=root ansible_ssh_pass=toor
+10.0.0.12:22 ansible_user=root ansible_ssh_pass=toor
+10.0.0.13:22 ansible_user=root ansible_ssh_pass=toor

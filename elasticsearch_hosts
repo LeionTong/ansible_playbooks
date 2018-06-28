@@ -1,0 +1,3 @@
+[elasticsearch_servers]
+10.0.0.11 node_name=es-node-1 node_master=true
+10.0.0.12 node_name=es-node-2 node_master=false

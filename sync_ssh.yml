@@ -1,0 +1,8 @@
+  - hosts: remote_servers
+    user: root
+    vars:
+      ssh_keyfile: /home/leion/.ssh/id_rsa.pub
+
+    tasks:
+     - name: copy ssh keyfile
+       authorized_key: user=root key="{{ lookup('file', '{{ ssh_keyfile }}') }}"

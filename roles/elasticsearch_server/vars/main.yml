@@ -1,0 +1,11 @@
+ES_MEM: 2g
+master_ip: 10.0.0.11
+install_dir: /opt/elk/elasticsearch
+
+cluster_name: es-cluster
+path_data: /opt/elk/elasticsearch/data
+path_logs: /opt/elk/elasticsearch/logs
+network_host: "{{ ansible_eth1.ipv4.address }}"
+http_port: 9200
+host1: 10.0.0.11
+host2: 10.0.0.12
