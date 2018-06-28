@@ -21,13 +21,18 @@
 
 - name: install configuration file for elasticsearch
   template: src=elasticsearch.yml.j2 dest={{ install_dir }}/elasticsearch-6.3.0/config/elasticsearch.yml owner=elk group=elk
-  tags:æ
+  tags:
   - conifg
 
 - name: create directory for elasticsearch-analysis-ik plugin
   file: dest={{ install_dir }}/elasticsearch-6.3.0/plugins/ik mode=0755 state=directory owner=elk group=elk
   tags:
   - install_ik
+
+- name: install unzip package
+  yum: name=unzip state=present
+  tags:
+  - install_unzip
 
 - name: copy and unizp elasticsearch-analysis-ik plugin
   unarchive: src=elasticsearch-analysis-ik-6.3.0.zip dest={{ install_dir }}/elasticsearch-6.3.0/plugins/ik
