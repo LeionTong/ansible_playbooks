@@ -1,5 +1,4 @@
 - hosts: elasticsearch_servers
   remote_user: root
-  gather_facts: False
   roles:
   - elasticsearch_server

@@ -1,11 +1,14 @@
 es_version: elasticsearch-6.3.0
 install_dir: /opt/elk/elasticsearch
-ES_MEM: 2g
 master_ip: 10.0.0.11
 cluster_name: es-cluster
 path_data: /opt/elk/elasticsearch/data
 path_logs: /opt/elk/elasticsearch/logs
-network_host: "{{ ansible_eth1.ipv4.address }}"
+bootstrap_memory_lock: true
+ES_MEM: 2g
+network_host: "{{ ansible_eth1.ipv4.address }}" 
 http_port: 9200
 host1: 10.0.0.11
 host2: 10.0.0.12
+discovery_zen_minimum_master_nodes: 1
+gateway_recover_after_nodes: 3
