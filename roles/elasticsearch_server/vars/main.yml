@@ -1,7 +1,7 @@
+es_version: elasticsearch-6.3.0
+install_dir: /opt/elk/elasticsearch
 ES_MEM: 2g
 master_ip: 10.0.0.11
-install_dir: /opt/elk/elasticsearch
-
 cluster_name: es-cluster
 path_data: /opt/elk/elasticsearch/data
 path_logs: /opt/elk/elasticsearch/logs

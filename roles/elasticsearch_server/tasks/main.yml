@@ -12,20 +12,20 @@
 
 - name: install elasticsearch
   # unarchive module owner and group only effect on directory.
-  unarchive: src=elasticsearch-6.3.0.tar.gz dest={{ install_dir }}
+  unarchive: src={{ es_version }}.tar.gz dest={{ install_dir }}
 
 # - name: install memory configuration file for elasticsearch
-  # template: src=elasticsearch.in.sh.j2 dest={{ install_dir }}/elasticsearch-6.3.0/bin/elasticsearch.in.sh owner=elk group=elk
+  # template: src=elasticsearch.in.sh.j2 dest={{ install_dir }}/{{ es_version }}/bin/elasticsearch.in.sh owner=elk group=elk
   # tags:
   # - conifg
 
 - name: install configuration file for elasticsearch
-  template: src=elasticsearch.yml.j2 dest={{ install_dir }}/elasticsearch-6.3.0/config/elasticsearch.yml owner=elk group=elk
+  template: src=elasticsearch.yml.j2 dest={{ install_dir }}/{{ es_version }}/config/elasticsearch.yml owner=elk group=elk
   tags:
   - conifg
 
 - name: create directory for elasticsearch-analysis-ik plugin
-  file: dest={{ install_dir }}/elasticsearch-6.3.0/plugins/ik mode=0755 state=directory owner=elk group=elk
+  file: dest={{ install_dir }}/{{ es_version }}/plugins/ik mode=0755 state=directory owner=elk group=elk
   tags:
   - install_ik
 
@@ -35,17 +35,17 @@
   - install_unzip
 
 - name: copy and unizp elasticsearch-analysis-ik plugin
-  unarchive: src=elasticsearch-analysis-ik-6.3.0.zip dest={{ install_dir }}/elasticsearch-6.3.0/plugins/ik
+  unarchive: src=elasticsearch-analysis-ik-6.3.0.zip dest={{ install_dir }}/{{ es_version }}/plugins/ik
   tags:
   - install_ik
 
 - name: change owner and group
   # 'recurse=yes' make all files in a directory changed.
-  file: path={{ install_dir }}/elasticsearch-6.3.0 owner=elk group=elk recurse=yes
+  file: path={{ install_dir }}/{{ es_version }} owner=elk group=elk recurse=yes
 
 - name: start elasticsearch
-  shell: su - elk -c '{{ install_dir }}/elasticsearch-6.3.0/bin/elasticsearch -d'
-  # command: {{ install_dir }}/elasticsearch-6.3.0/bin/elasticsearch -d
+  shell: su - elk -c '{{ install_dir }}/{{ es_version }}/bin/elasticsearch -d'
+  # command: {{ install_dir }}/{{ es_version }}/bin/elasticsearch -d
   # become: true
   # become_method: su
   # become_user: elk
