@@ -1,0 +1,32 @@
+#========修改 packetbeat 配置文檔========
+#複製「packetbeat」
+  - name: 複製「packetbeat-6.3.0」 
+    copy: src='/opt/packetbeat-6.3.0-linux-x86_64.tar.gz' dest='/opt/'
+#解壓縮「packetbeat」
+  - name: 解壓縮 「packetbeat-6.3.0-linux-x86_64.tar.gz」 指定「/opt」 位置
+    shell: tar -C /opt/ -zvxf /opt/packetbeat-6.3.0-linux-x86_64.tar.gz
+#========修改 packetbeat.yml 配置文檔========
+#=停止輸出「elasticsearch output」===
+  - name: 修改 metricbeat.yml 配置文檔
+    shell: sed -i 's/output.elasticsearch:/#output.elasticsearch:/' /opt/packetbeat-6.3.0-linux-x86_64/packetbeat.yml
+  - name: 修改 metricbeat.yml 配置文檔
+    shell: sed -i 's/hosts:\s\["localhost:9200"\]/#hosts:\ \["localhost:9200"\]/g' /opt/packetbeat-6.3.0-linux-x86_64/packetbeat.yml
+#========修改 packetbeat.yml 配置文檔========
+#=輸出「Logstash output」===
+  - name: 修改 packetbeat.yml 配置文檔
+    shell: sed -i 's/#output.logstash:/output.logstash:/' /opt/packetbeat-6.3.0-linux-x86_64/packetbeat.yml
+  - name: 修改 packetbeat.yml 配置文檔
+    shell: sed -i 's/#hosts:\s\["localhost:5044"\]/hosts:\ \["{{ip_address}}:{{ip_port}}"\]/g' /opt/packetbeat-6.3.0-linux-x86_64/packetbeat.yml
+#========「nohup」後台執行「packetbeat」=====
+#背景執行「packetbeat」會讀取「packetbeat.yml」設定檔
+  - name: 背景執行「packetbeat」會讀取「packetbeat.yml」設定檔
+    shell: nohup /opt/packetbeat-6.3.0-linux-x86_64/packetbeat -e -c /opt/packetbeat-6.3.0-linux-x86_64/packetbeat.yml >/dev/null 2>&1 &
+#========「檢查」後台「packetbeat」PID=====
+  - name: check_packetbeat_pid
+    shell: ps -ef | grep "packetbeat"
+    #使用「register」紀錄「結果」
+    register: packetbeat_pid_log
+  - name: print packetbeat_pid
+    debug:
+    #顯示「紀錄結果」
+     msg: "{{ packetbeat_pid_log }}"

@@ -1,0 +1,36 @@
+#複製「filebeat」
+  - name: 複製「filebeat-6.3.0」 
+    copy: src='/opt/filebeat-6.3.0-linux-x86_64.tar.gz' dest='/opt/'
+#解壓縮「filebeat」
+  - name: 解壓縮 「filebeat-6.3.0-linux-x86_64.tar.gz」 指定「/opt」 位置
+    shell: tar -C /opt/ -zvxf /opt/filebeat-6.3.0-linux-x86_64.tar.gz
+#清空「配置」
+  - name: 清空「配置」
+    shell: echo > /opt/filebeat-6.3.0-linux-x86_64/filebeat.yml
+#=========編寫「filebeat.yml」設定檔====
+  - name: 建立「檔案」 並 編寫「內容」
+    shell:
+      cmd: |
+        cat <<EOF > /opt/filebeat-6.3.0-linux-x86_64/filebeat.yml
+        filebeat.prospectors:
+        - input_type: log                               #輸入 type「log」
+          paths:
+           - {{log_path}}                               #指定推送日誌「Log」文件
+          fields:
+           host_ip: {{ansible_default_ipv4.address}}    #告知「來源」IP 位址
+           tags: ["{{tag}}"]                            #設定「標籤」  
+        output.logstash:
+          hosts: ["{{ip_address}}:{{ip_port}}"]                #指定接收Logstash的「IP」和「端口」
+        EOF
+#========「nohup」後台「執行」會產生「filebeat」=====
+  - name: 解壓縮 「filebeat-6.3.0-linux-x86_64.tar.gz」 指定「/opt」 位置
+    shell: nohup /opt/filebeat-6.3.0-linux-x86_64/filebeat -e -c /opt/filebeat-6.3.0-linux-x86_64/filebeat.yml -d "publish" >/dev/null 2>&1 &
+#========「檢查」後台「filebeat」PID=====
+  - name: check_packetbeat_pid
+    shell: ps -ef | grep "filebeat"
+    #使用「register」紀錄「結果」
+    register: filebeat_pid_log
+  - name: print filebeat_pid
+    debug:
+    #顯示「紀錄結果」
+     msg: "{{ filebeat_pid_log }}"
