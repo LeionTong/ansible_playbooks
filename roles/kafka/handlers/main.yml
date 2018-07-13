@@ -1,3 +1,10 @@
-- name: restart kafka
-  shell: "{{ install_dir }}/{{ kafka_version }}/bin/kafka-server-stop.sh; \
-  {{ install_dir }}/{{ kafka_version }}/bin/kafka-server-start.sh -daemon {{ install_dir }}/{{ kafka_version }}/config/server.properties"
+# - name: stop  kafka
+#   shell: {{ install_dir }}/{{ kafka_version }}/bin/kafka-server-stop.sh
+#
+# - name: wait for kafka shutdown complete
+#   shell: tail -1 {{ install_dir }}/{{ kafka_version }}/logs/server.log
+#   register: result
+#   until: result.stdout.find("shut down completed") != -1
+#   delay: 5
+#
+#   shell: {{ install_dir }}/{{ kafka_version }}/bin/kafka-server-start.sh -daemon {{ install_dir }}/{{ kafka_version }}/config/server.properties

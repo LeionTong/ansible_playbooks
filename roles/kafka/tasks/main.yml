@@ -4,12 +4,9 @@
 - name: install kafka
   unarchive: src={{ kafka_version }}.tgz dest={{ install_dir }}
 
-- name: backup original configuration file
-  copy: src={{ install_dir }}/{{ kafka_version }}/config/server.properties dest={{ install_dir }}/{{ kafka_version }}/config/server.properties.ori
-
 - name: install configuration file
   template: src=server.properties.j2 dest={{ install_dir }}/{{ kafka_version }}/config/server.properties
-  notify: restart kafka
+  # notify: restart kafka
   tags:
     - config
 
