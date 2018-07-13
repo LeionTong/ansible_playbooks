@@ -1,5 +1,5 @@
 kafka_version: kafka_2.12-1.1.0
-install_dir: /opt/kafka/
+install_dir: /opt/kafka
 kafka_manager_ip: 10.0.0.11
 listeners_PORT: 9092
 num_network_threads: 3

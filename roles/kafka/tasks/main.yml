@@ -9,15 +9,17 @@
 
 - name: install configuration file
   template: src=server.properties.j2 dest={{ install_dir }}/{{ kafka_version }}/config/server.properties
+  notify: restart kafka
   tags:
     - config
-  #- name: copy script to clear kafka logs
+
+  #- name: copy script of clear kafka logs
   #  copy: src=clean_kafkalog.sh dest={{ install_dir }}/{{ kafka_version }}/clean_kafkalog.sh mode=755
   #- name: crontab task
   #  cron: name="clear kafka logs" weekday="0" hour="0" minute="0" job="{{ install_dir }}/{{ kafka_version }}/clean_kafkalog.sh"
 
 - name: start kafka
-  shell: {{ install_dir }}/{{ kafka_version }}/bin/kafka-server-start.sh -daemon {{ install_dir }}/{{ kafka_version }}/config/server.properties
+  shell: "{{ install_dir }}/{{ kafka_version }}/bin/kafka-server-start.sh -daemon {{ install_dir }}/{{ kafka_version }}/config/server.properties"
   tags:
     - start_kafka
 
