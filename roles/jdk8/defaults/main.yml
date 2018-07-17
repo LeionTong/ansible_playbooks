@@ -1,3 +1,3 @@
-jdk_package_name: jdk-8u171-linux-x64.tar.gz
+jdk_package: jdk-8u171-linux-x64.tar.gz
 env_file: /etc/profile.d/java_env.sh
-jdk_version: jdk1.8.0_171
+jdk_version: 1.8.0_171
