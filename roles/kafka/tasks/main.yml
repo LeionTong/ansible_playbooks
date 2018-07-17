@@ -1,35 +1,49 @@
-- name: create directory {{ install_dir }}
-  file: path={{ install_dir }} state=directory
+---
+
+- name: check if install_path directory exists
+  stat: path={{ install_path }}
+  register: logdir
+  changed_when: false
+  when: install_path != '""'
+
+- name: create install_path directory if it does not exist
+  file: path={{ install_path }} state=directory
+  when:
+    - install_path != '""'
+    - not logdir.stat.exists
+
+- name: create directory {{ install_path }}
+  file: path={{ install_path }} state=directory
 
 - name: install kafka
-  unarchive: src={{ kafka_version }}.tgz dest={{ install_dir }}
+  unarchive: src={{ kafka_tarball }}.tgz dest={{ install_path }}
 
 - name: install configuration file
-  template: src=server.properties.j2 dest={{ install_dir }}/{{ kafka_version }}/config/server.properties
+  template: src=server.properties.j2 dest={{ install_path }}/kafka_{{ kafka_version }}/config/server.properties
   # notify: restart kafka
   tags:
     - config
 
   #- name: copy script of clear kafka logs
-  #  copy: src=clean_kafkalog.sh dest={{ install_dir }}/{{ kafka_version }}/clean_kafkalog.sh mode=755
+  #  copy: src=clean_kafkalog.sh dest={{ install_path }}/clean_kafkalog.sh mode=755
   #- name: crontab task
-  #  cron: name="clear kafka logs" weekday="0" hour="0" minute="0" job="{{ install_dir }}/{{ kafka_version }}/clean_kafkalog.sh"
+  #  cron: name="clear kafka logs" weekday="0" hour="0" minute="0" job="{{ install_path }}/clean_kafkalog.sh"
 
 - name: start kafka
-  shell: "{{ install_dir }}/{{ kafka_version }}/bin/kafka-server-start.sh -daemon {{ install_dir }}/{{ kafka_version }}/config/server.properties"
+  shell: "{{ install_path }}/kafka_{{ kafka_version }}/bin/kafka-server-start.sh -daemon {{ install_path }}/kafka_{{ kafka_version }}/config/server.properties"
   tags:
     - start_kafka
 
     #- name: install kafka-manager
-    #  unarchive: src=kafka-manager-1.3.0.6.zip dest={{ install_dir }}
+    #  unarchive: src=kafka-manager-1.3.0.6.zip dest={{ install_path }}
     #  when: ansible_default_ipv4['address'] == "{{kafka_manager_ip}}"
     #
     #- name: install configuration file for kafka-manager
-    #  template: src=application.conf.j2 dest=/usr/local/kafka-manager-1.3.0.6/conf/application.conf
+    #  template: src=application.conf.j2 dest={{ install_path }}/kafka-manager-1.3.0.6/conf/application.conf
     #  when: ansible_default_ipv4['address'] == "{{kafka_manager_ip}}"
     #
     #- name: start kafka-manager
-    #  shell: nohup {{ install_dir }}/kafka-manager-1.3.0.6/bin/kafka-manager &
+    #  shell: nohup {{ install_path }}/kafka-manager-1.3.0.6/bin/kafka-manager &
     #  when: ansible_default_ipv4['address'] == "{{kafka_manager_ip}}"
     #  tags:
     #   - start_kafka-manager
