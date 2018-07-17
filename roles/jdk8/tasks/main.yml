@@ -1,33 +1,46 @@
 - name: create necessary catalog
-  file: path=/opt/java state=directory mode=0755
+  file: path={{ install_path }} state=directory mode=0755
 
 - name: install jdk
-  unarchive: src={{ jdk_package }} dest=/opt/java
+  unarchive: src={{ jdk_package }} dest={{ install_path }}
   tags:
     - install
 
-- name: create env_file
-  file: path={{ env_file }} state=touch
+# - name: create env_file
+#   file: path={{ env_file }} state=touch
+#
+# - name: check jdk variable
+#   shell: cat {{ env_file }}
+#   register: result
+#   tags:
+#     - config
+#
+# - name: set global environment
+#   lineinfile: dest={{ env_file }} insertafter="{{ item.position }}" line="{{ item.value }}" state=present
+#   when: result.stdout.find('JAVA_HOME') == -1
+#   with_items:
+#     - {position: EOF, value: "\n"}
+#     - {position: EOF, value: "export JAVA_HOME={{ install_path }}/jdk{{ jdk_version }}"}
+#     - {position: EOF, value: "export JAVA_BIN={{ install_path }}/jdk{{ jdk_version }}/bin"}
+#     - {position: EOF, value: "export PATH=$PATH:$JAVA_HOME/bin"}
+#     - {position: EOF, value: "export JRE_HOME={{ install_path }}/jdk{{ jdk_version }}/jre"}
+#     - {position: EOF, value: "export CLASSPATH=.:$JAVA_HOME/lib/:$JAVA_HOME/jre/lib"}
+#     # - {position: EOF, value: "export JAVA_HOME JAVA_BIN PATH JRE_HOME CLASSPATH"}
+#   tags:
+#     - config
 
-- name: check jdk variable
-  shell: cat {{ env_file }}
-  register: env_result
+- name: set user environment insert/update ~/.bashrc
+  blockinfile:
+    path: ~/.bashrc
+    block: |
+      export JAVA_HOME={{ install_path }}/jdk{{ jdk_version }}
+      export JAVA_BIN={{ install_path }}/jdk{{ jdk_version }}/bin
+      export JRE_HOME={{ install_path }}/jdk{{ jdk_version }}/jre
+      export PATH=$PATH:$JAVA_HOME/bin
+      export CLASSPATH=.:$JAVA_HOME/lib/:$JAVA_HOME/jre/lib
+    backup: yes
   tags:
     - config
 
-- name: set env
-  lineinfile: dest={{ env_file }} insertafter="{{ item.position }}" line="{{ item.value }}" state=present
-  when: env_result.stdout.find('JAVA_HOME') == -1
-  with_items:
-    - {position: EOF, value: "\n"}
-    - {position: EOF, value: "export JAVA_HOME=/opt/java/jdk{{ jdk_version }}"}
-    - {position: EOF, value: "export JAVA_BIN=/opt/java/jdk{{ jdk_version }}/bin"}
-    - {position: EOF, value: "export PATH=$PATH:$JAVA_HOME/bin"}
-    - {position: EOF, value: "export JRE_HOME=/opt/java/jdk{{ jdk_version }}/jre"}
-    - {position: EOF, value: "export CLASSPATH=.:$JAVA_HOME/lib/:$JAVA_HOME/jre/lib"}
-    # - {position: EOF, value: "export JAVA_HOME JAVA_BIN PATH JRE_HOME CLASSPATH"}
-  tags:
-    - config
-
-- name: source env
-  shell: source {{ env_file }}
+# - name: source env
+#   shell: source {{ env_file }}
