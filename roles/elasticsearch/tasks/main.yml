@@ -1,26 +1,17 @@
-- name: create elasticsearch user :elk
-  user: name=elk password="{{ password }}"
-  vars:
-  # created with 'openssl rand -hex 10'.
-    password: 3d6e1cb9b562f7e2f9dd
-
-- name: create directory for elasticsearch
-  file: dest={{ install_dir }} mode=0755 state=directory owner=elk group=elk
-
 - name: create directory for elasticsearch data
-  file: dest="{{ path_data }}" mode=0755 state=directory owner=elk group=elk
+  file: dest="{{ path_data }}" mode=0755 state=directory
 
 - name: install elasticsearch
   # unarchive module owner and group only effect on directory.
-  unarchive: src={{ es_version }}.tar.gz dest={{ install_dir }}
+  unarchive: src={{ es_package }} dest={{ install_path }}
 
 # - name: install memory configuration file for elasticsearch
-  # template: src=elasticsearch.in.sh.j2 dest={{ install_dir }}/{{ es_version }}/bin/elasticsearch.in.sh owner=elk group=elk
+  # template: src=elasticsearch.in.sh.j2 dest={{ install_path }}/elasticsearch-{{ es_version }}/bin/elasticsearch.in.sh
   # tags:
-  # - conifg
+  # - config
 
 - name: install configuration file for elasticsearch
-  template: src=elasticsearch.yml.j2 dest={{ install_dir }}/{{ es_version }}/config/elasticsearch.yml owner=elk group=elk
+  template: src=elasticsearch.yml.j2 dest={{ install_path }}/elasticsearch-{{ es_version }}/config/elasticsearch.yml
   tags:
   - config
 
@@ -30,24 +21,16 @@
   - install_unzip
 
 - name: create directory for elasticsearch-analysis-ik plugin
-  file: dest={{ install_dir }}/{{ es_version }}/plugins/ik mode=0755 state=directory owner=elk group=elk
+  file: dest={{ install_path }}/elasticsearch-{{ es_version }}/plugins/ik mode=0755 state=directory
   tags:
   - install_ik
 
 - name: copy and unizp elasticsearch-analysis-ik plugin
-  unarchive: src=elasticsearch-analysis-ik-6.3.0.zip dest={{ install_dir }}/{{ es_version }}/plugins/ik
+  unarchive: src=elasticsearch-analysis-ik-6.3.0.zip dest={{ install_path }}/elasticsearch-{{ es_version }}/plugins/ik
   tags:
   - install_ik
 
-- name: change owner and group
-  # 'recurse=yes' make all files in a directory changed.
-  file: path={{ install_dir }}/{{ es_version }} owner=elk group=elk recurse=yes
-
 - name: start elasticsearch
-  shell: su - elk -c '{{ install_dir }}/{{ es_version }}/bin/elasticsearch -d'
-  # command: {{ install_dir }}/{{ es_version }}/bin/elasticsearch -d
-  # become: true
-  # become_method: su
-  # become_user: elk
+  shell: {{ install_path }}/elasticsearch-{{ es_version }}/bin/elasticsearch -d
   tags:
   - start_elasticsearch
