@@ -1,0 +1,48 @@
+---
+- name: init_user.yml:To create user and set ssh keys.
+# 创建用户，设置wheel组sudo不需要密码，然后将用户添加到wheel组，并将用户的公钥传输到节点上。
+  hosts: remote_servers
+  remote_user: root
+  # sudo: yes
+  vars:
+    user_name: deploy
+    ssh_keyfile: /home/leion/.ssh/id_rsa.pub  #要将本地的某个ssh公钥写入到目标用户的authorized_keys文件里。
+    user_password_plain: deploy
+    # encrypted sha5 password shoud be created by "".
+    user_password_sha5: $6$qXnRTSl0$9IFU58ZOnwjjrval96f6Q/1RtPYKS2Qmh3cFUmtU407tFr8YABuhg5GubDGeBieBDXCa0xyveSSTI/mvGfIEd0
+
+  tasks:
+    - name: Ensure group 'wheel' exists.
+      # shell: getent group wheel || group add wheel
+      group:
+        name: wheel
+        state: present
+
+    - name: Allow 'wheel' group to have passwordless sudo authority.
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^%wheel\s'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+
+    - name: Create user {{ user_name }}.
+      # shell: useradd {{ user_name }} -G wheel && echo {{ user_password_plain }} | passwd --stdin {{ user_name }}
+      user:
+        name: "{{ user_name }}"
+        password: "{{ user_password_sha5 }}"
+        state: present
+        shell: /bin/bash
+        groups: wheel
+        createhome: yes
+        home: /home/{{ user_name }}
+
+    - name: Create ssh directory.
+      action: file path=/home/{{ user_name }}/.ssh/ state=directory owner={{ user_name }} group={{ user_name }} mode=0700
+
+    - name: Create authorized_keys file.
+      action: file path=/home/{{ user_name }}/.ssh/authorized_keys state=touch owner={{ user_name }} group={{ user_name }} mode=0600
+
+    - name: Copy the ssh_keyfile on the machine which is running the ansible-playbook into remote_servers' authorized_keys.
+      authorized_key:
+        user: "{{ user_name }}"
+        key: "{{ lookup('file', '{{ ssh_keyfile }}') }}"
