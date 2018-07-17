@@ -1,14 +1,14 @@
 es_version: 6.3.0
 es_package: elasticsearch-{{ es_version }}.tar.gz
-install_path: /opt/elk/elasticsearch
+install_path: /home/deploy/elk/elasticsearch
 master_ip: 10.0.0.11
 cluster_name: es-cluster
-path_data: /opt/elk/elasticsearch/data
-path_logs: /opt/elk/elasticsearch/logs
-bootstrap_memory_lock: true
+path_data: /home/deploy/elk/elasticsearch/data
+path_logs: /home/deploy/elk/elasticsearch/logs
+bootstrap_memory_lock: false
 ES_MEM: 2g
 network_host: "{{ ansible_eth1.ipv4.address }}"
 http_port: 9200
-discovery_zen_ping_unicast_hosts: ["10.0.0.11", "10.0.0.12"]
+discovery_zen_ping_unicast_hosts: '["10.0.0.11", "10.0.0.12"]'
 discovery_zen_minimum_master_nodes: 1
-gateway_recover_after_nodes: 3
+gateway_recover_after_nodes: 2
