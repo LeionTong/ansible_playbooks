@@ -1,0 +1,43 @@
+---
+- name: Linux Create User and Upload User Public keys
+# 创建用户，设置wheel组sudo不需要密码，然后将用户添加到wheel组，并将用户的公钥传输到节点上。
+  hosts: remote_servers
+  user: root
+  # sudo: yes
+  vars:
+    username: leion
+    ssh_keyfile: /home/{{ username }}/.ssh/id_rsa.pub
+  tasks:
+    - name: Make sure we have a 'wheel' group
+      group:
+        name: wheel
+        state: present
+
+    - name: Allow 'wheel' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+
+    - name: Create user {{ username }}
+      # shell: echo deploy | passwd --stdin {{ username }}
+      user:
+        name: "{{ username }}"
+        shell: /bin/bash
+        groups: wheel
+        createhome: yes
+        home: /home/{{ username }}
+        state: present
+
+    - name: create sshkey directory
+      action: file path=/home/{{ username }}/.ssh/ state=directory owner={{ username }} group={{ username }} mode=0700
+
+    - name: create sshkey file
+      action: file path=/home/{{ username }}/.ssh/authorized_keys state=touch owner={{ username }} group={{ username }} mode=0600
+
+    - name: Set authorized key took from file
+      authorized_key:
+        user: "{{ username }}"
+        state: present
+        key: "{{ lookup('file', '{{ ssh_keyfile }}') }}"
