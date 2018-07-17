@@ -12,7 +12,7 @@
     - install_path != '""'
     - not logdir.stat.exists
 
-- name: create directory {{ install_path }}
+- name: create necessary catalog
   file: path={{ install_path }} state=directory
 
 - name: install kafka
