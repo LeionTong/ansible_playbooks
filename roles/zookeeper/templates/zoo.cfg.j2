@@ -1,22 +1,22 @@
 # The number of milliseconds of each tick
-tickTime=2000
-# The number of ticks that the initial 
+tickTime={{ tickTime }}
+# The number of ticks that the initial
 # synchronization phase can take
-initLimit=10
-# The number of ticks that can pass between 
+initLimit={{ initLimit }}
+# The number of ticks that can pass between
 # sending a request and getting an acknowledgement
-syncLimit=5
+syncLimit={{ syncLimit }}
 # the directory where the snapshot is stored.
-# do not use /tmp for storage, /tmp here is just 
+# do not use /tmp for storage, /tmp here is just
 # example sakes.
-dataDir=/opt/zookeeper/zkdata
+dataDir={{ dataDir }}
 # the port at which the clients will connect
-clientPort=12181
+clientPort={{ clientPort }}
 # the maximum number of client connections.
 # increase this if you need to handle more clients
 #maxClientCnxns=60
 #
-# Be sure to read the maintenance section of the 
+# Be sure to read the maintenance section of the
 # administrator guide before turning on autopurge.
 #
 # http://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_maintenance
@@ -27,7 +27,7 @@ clientPort=12181
 # Set to "0" to disable auto purge feature
 #autopurge.purgeInterval=1
 
-dataLogDir=/opt/zookeeper/zkdatalog
-server.1=10.0.0.11:12888:13888
-server.2=10.0.0.12:12888:13888
-server.3=10.0.0.13:12888:13888
+dataLogDir={{ dataLogDir }}
+server.1={{ server_1 }}
+server.2={{ server_2 }}
+server.3={{ server_3 }}

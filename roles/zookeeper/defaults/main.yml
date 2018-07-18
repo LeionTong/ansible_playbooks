@@ -1,0 +1,12 @@
+zookeeper_version: 3.4.12
+zookeeper_package: zookeeper-{{ zookeeper_version }}.tar.gz
+install_path: /home/deploy/zookeeper
+tickTime: 2000
+initLimit: 10
+syncLimit: 5
+dataDir: /home/deploy/zookeeper/zkdata
+clientPort: 12181
+dataLogDir: /home/deploy/zookeeper/zkdatalog
+server_1: 10.0.0.11:12888:13888
+server_2: 10.0.0.12:12888:13888
+server_3: 10.0.0.13:12888:13888

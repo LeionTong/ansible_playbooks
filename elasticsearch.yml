@@ -17,6 +17,6 @@
         ES_MEM: 2g
         network_host: "{{ ansible_eth1.ipv4.address }}"
         http_port: 9200
-        discovery_zen_ping_unicast_hosts: ["10.0.0.11", "10.0.0.12"]
+        discovery_zen_ping_unicast_hosts: '["10.0.0.11", "10.0.0.12"]'
         discovery_zen_minimum_master_nodes: 1
         gateway_recover_after_nodes: 3
