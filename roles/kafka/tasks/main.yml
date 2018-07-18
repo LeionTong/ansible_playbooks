@@ -2,7 +2,7 @@
 
 - name: check if install_path directory exists
   stat: path={{ install_path }}
-  register: logdir
+  register: insdir
   changed_when: false
   when: install_path != '""'
 
@@ -10,13 +10,13 @@
   file: path={{ install_path }} state=directory
   when:
     - install_path != '""'
-    - not logdir.stat.exists
+    - not insdir.stat.exists
 
 - name: create necessary catalog
   file: path={{ install_path }} state=directory
 
 - name: install kafka
-  unarchive: src={{ kafka_tarball }}.tgz dest={{ install_path }}
+  unarchive: src={{ kafka_package }} dest={{ install_path }}
 
 - name: install configuration file
   template: src=server.properties.j2 dest={{ install_path }}/kafka_{{ kafka_version }}/config/server.properties
