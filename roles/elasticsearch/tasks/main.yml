@@ -31,6 +31,13 @@
   - install_ik
 
 - name: start elasticsearch
-  shell: "{{ install_path }}/elasticsearch-{{ es_version }}/bin/elasticsearch -d"
+  shell: "{{ install_path }}/elasticsearch-{{ es_version }}/bin/elasticsearch -d -p /tmp/es.pid"
+  # "cmd": "/home/deploy/elk/elasticsearch/elasticsearch-6.3.0/bin/elasticsearch -d -p /tmp/es.pid"
+  register: result
+  tags:
+  - start_elasticsearch
+
+- name: show start_elasticsearch result
+  debug: var=result
   tags:
   - start_elasticsearch
