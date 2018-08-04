@@ -29,7 +29,7 @@ broker.id={{ broker_id }}
 #   EXAMPLE:
 #     listeners = PLAINTEXT://your.host.name:9092
 #listeners=PLAINTEXT://:9092
-listeners=PLAINTEXT://:{{ listeners_PORT }}
+listeners={{ listeners }}
 
 # Hostname and port the broker will advertise to producers and consumers. If not set,
 # it uses the value for "listeners" if configured.  Otherwise, it will use the value
