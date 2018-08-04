@@ -1,0 +1,39 @@
+---
+- name: create necessary catalog
+  file: path={{ item }} state=directory
+  with_items:
+    - "{{ install_path }}"
+    - "{{ path_data }}"
+    - "{{ path_logs }}"
+
+- name: install logstash
+  unarchive: src={{ logstash_package }} dest={{ install_path }}
+
+- name: install configuration file
+  template: src=logstash.yml.j2 dest={{ install_path }}/logstash-{{ logstash_version }}/config/logstash.yml
+  # notify: restart logstash
+  tags:
+    - config
+
+- name: install logstash pipeline file
+  template: src={{ logstash_pipeline_conf }} dest={{ install_path }}/logstash-{{ logstash_version }}/config/{{ logstash_pipeline_conf }}
+  # notify: restart logstash
+  tags:
+    - config_pipeline
+
+- name: check logstash pipeline file
+  shell: "{{ install_path }}/logstash-{{ logstash_version }}/bin/logstash -f {{ install_path }}/logstash-{{ logstash_version }}/config/{{ logstash_pipeline_conf }} --config.test_and_exit"
+  register: result
+  tags:
+    - config_pipeline
+
+- name: print "check logstash pipeline file" result
+  debug: msg={{ result }}
+  tags:
+   - config_pipeline
+
+# - name: start logstash
+  # shell: "{{ install_path }}/logstash-{{ logstash_version }}/bin/logstash -f {{ install_path }}/logstash-{{ logstash_version }}/config/{{ logstash_pipeline_conf }} --config.reload.automatic"
+  # when:
+#   tags:
+#     - start_logstash

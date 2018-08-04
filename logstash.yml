@@ -1,0 +1,14 @@
+- hosts: logstash_servers
+  remote_user: deploy
+  roles:
+    - logstash
+  vars:
+    - fixed:
+    - dynamic:
+        logstash_version: 6.3.0
+        logstash_package: logstash-{{ logstash_version }}.tar.gz
+        deploy_home: "{{ ansible_user_dir }}"
+        install_path: "{{ deploy_home }}/logstash"
+        path_data: "{{ install_path }}/data"
+        path_logs: "{{ install_path }}/logs"
+        logstash_pipeline_conf: 

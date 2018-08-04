@@ -1,40 +1,20 @@
-- hosts: 192.168.8.51
-#======交互是對答====================================
-  vars_prompt:
-#==vars_prompt 參數 利用 「name」 存放 變數
-  - name: 'log_path'
-#手工输入数据
-    prompt: '指定推送日志「路径」'
-#当该值为yes，则用户的输入不会被打印 
-    private: no
-#設定「Default」值
-    default: "/var/log/secure"
-#==vars_prompt 參數 利用 「name」 存放 變數
-  - name: 'tag'
-#手工输入数据
-    prompt: '设定日志「标签」'
-#当该值为yes，则用户的输入不会被打印
-    private: no
-#設定「Default」值
-    default: "secure"
-#==vars_prompt 參數 利用 「name」 存放 變數
-  - name: 'ip_address'
-#手工输入数据
-    prompt: '输入_ELK(Logstash)_IP'
-#当该值为yes，则用户的输入不会被打印 
-    private: no
-#設定「Default」值
-    default: "192.168.8.50"
-#==vars_prompt 參數 利用 「name」 存放 變數
-  - name: 'ip_port'
-#手工输入数据            
-    prompt: '输入_ELK(Logstash)Port'
-#当该值为yes，则用户的输入不会被打印 
-    private: no
-#設定「Default」值
-    default: "5043"
-#===role(派送)=========================================
+- hosts: filebeat_servers
+  remote_user: deploy
   roles:
-# 指向「install_java_ruby_rubygems」就會自動尋找「tasks」=>「main.yml」執行
-# become 代表我們要升高當前使用者權限 (等效於 Unix / Linux 中的 sudo 指令) 來運行當前工作
-     - { role: filebeat, become: yes }
+    - filebeat
+  vars:
+    - fixed:
+
+    - dynamic:
+        filebeat_version: 6.3.0
+        filebeat_package: filebeat-{{ filebeat_version }}-linux-x86_64.tar.gz
+        deploy_home: "{{ ansible_user_dir }}"
+        install_path: "{{ deploy_home }}/filebeat"
+        configuration_template: filebeat-input-log-ouput-kafka.yml.j2
+        filebeat_inputs_enabled: true
+        filebeat_inputs_paths: 
+        fields_log_topics: leion
+        setup_kibana_host: "10.0.0.13:5601"
+        output_logstash_hosts: '["10.0.0.13:5044"]'
+        output_elasticsearch_hosts: '["10.0.0.11:9200", "10.0.0.12:9200"]'
+        output_kafka_hosts: '["10.0.0.11:9092", "10.0.0.12:9092", "10.0.0.13:9092"]'

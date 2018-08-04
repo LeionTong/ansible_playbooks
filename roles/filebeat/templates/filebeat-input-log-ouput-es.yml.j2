@@ -1,0 +1,26 @@
+#=========================== Filebeat inputs =============================
+filebeat.inputs:
+
+# Each - is an input. Most options can be set at the input level, so
+# you can use different inputs for various configurations.
+# Below are the input specific configurations.
+
+- type: log
+
+  # Change to true to enable this input configuration.
+  enabled: {{ filebeat_inputs_enabled }}
+
+  # Paths that should be crawled and fetched. Glob based paths.
+  paths:
+    - {{ filebeat_inputs_paths }}
+    #- c:\programdata\elasticsearch\logs\*
+
+#-------------------------- Elasticsearch output ------------------------------
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: {{ output_elasticsearch_hosts }}
+
+  # Optional protocol and basic auth credentials.
+  #protocol: "https"
+  #username: "elastic"
+  #password: "changeme"
