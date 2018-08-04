@@ -1,0 +1,28 @@
+---
+- name: create necessary catalog
+  file: path={{ install_path }} state=directory
+
+- name: install kibana
+  unarchive: src={{ kibana_package }} dest={{ install_path }}
+
+- name: install configuration file
+  template: src=kibana.yml.j2 dest={{ install_path }}/kibana-{{ kibana_version }}-linux-x86_64/config/kibana.yml
+  # notify: restart filebeat
+  tags:
+  - config
+
+- name: start kibana
+  shell: "{{ install_path }}/kibana-{{ kibana_version }}-linux-x86_64/bin/kibana &>/dev/null &"
+  tags:
+  - start_kibana
+
+# - name: check kibana ps
+#   shell: "ps aux | grep kibana"
+#   register: result
+#   tags:
+#   - start_kibana
+#
+# - name: print kibana_ps_result
+#   debug: msg={{ result }}
+#   tags:
+#   - start_kibana
