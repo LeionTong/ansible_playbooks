@@ -1,10 +1,11 @@
 es_version: 6.3.0
 es_package: elasticsearch-{{ es_version }}.tar.gz
-install_path: /home/deploy/elk/elasticsearch
+deploy_home: "{{ ansible_user_dir }}"
+install_path: "{{ deploy_home }}/elasticsearch"
 master_ip: 10.0.0.11
 cluster_name: es-cluster
-path_data: /home/deploy/elk/elasticsearch/data
-path_logs: /home/deploy/elk/elasticsearch/logs
+path_data: {{ install_path }}/data
+path_logs: {{ install_path }}/logs
 bootstrap_memory_lock: false
 ES_MEM: 2g
 network_host: "{{ ansible_eth1.ipv4.address }}"
