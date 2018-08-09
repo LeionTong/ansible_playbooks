@@ -1,4 +1,4 @@
-## jdk8 role 使用指南
+## jdk8 role manual
 
 ### Variables：
 

@@ -1,4 +1,4 @@
-## zookeeper role 使用指南
+## zookeeper role manual
 
 ### Variables：
 
