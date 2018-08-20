@@ -1,25 +1,3 @@
-# ansible_playbooks
-
-ELKB roles playbook：
-
-    Data Source => filebeat => Kafka <=> zookeeper
-                      ||
-                      ︾
-                   logstash => Elasticsearch => Kibana
-                      ||
-                      ︾ .=> .=> hdfs
-
-For comprehensive details refer to the README.md in every role directory.
-
-## todo list:
-hdfs role
-
-
-## Requisitions Check Example:
-
-requisition_precheck.yml
-
-```
 ---
 - hosts: deploy_servers
   vars:
@@ -83,4 +61,3 @@ requisition_precheck.yml
     - name: check_kibana_port
       wait_for: port={{ kibana_port }} timeout=1
       debug: msg=ok
-```

@@ -1,0 +1,37 @@
+---
+- hosts: deploy_servers
+  vars:
+  tasks:
+    - name: check java version
+      shell: source ~/.bash_profile; java -version
+      register: result
+      failed_when: "'1.8' not in result.stderr"
+
+    - name: check python version
+      shell: python -V|grep '2.7'
+      register: result
+      failed_when: "'' == result.stderr"
+
+- hosts: elasticsearch_servers
+  vars:
+     elasticsearch_port: 9200
+  tasks:
+    - name: check_elasticsearch_port
+      wait_for: port={{ elasticsearch_port }} timeout=1
+      debug: msg=ok
+
+- hosts: logstash_servers
+  vars:
+     logstash_port: 9600
+  tasks:
+    - name: check_logstash_port
+      wait_for: port={{ logstash_port }} timeout=1
+      debug: msg=ok
+
+- hosts: kibana_servers
+  vars:
+     kibana_port: 5601
+  tasks:
+    - name: check_kibana_port
+      wait_for: port={{ kibana_port }} timeout=1
+      debug: msg=ok

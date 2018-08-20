@@ -1,0 +1,24 @@
+[deploy_servers]
+10.0.0.11:22 ansible_user=deploy ansible_ssh_pass=deploy
+10.0.0.12:22 ansible_user=deploy ansible_ssh_pass=deploy
+10.0.0.13:22 ansible_user=deploy ansible_ssh_pass=deploy
+
+[zookeeper_servers]
+10.0.0.11:22 myid=1
+10.0.0.12:22 myid=2
+10.0.0.13:22 myid=3
+
+[kafka_servers]
+10.0.0.11 broker_id=0
+10.0.0.12 broker_id=1
+10.0.0.13 broker_id=2
+
+[elasticsearch_servers]
+10.0.0.11 node_name=es-node-1 node_master=true
+10.0.0.12 node_name=es-node-2 node_master=false
+
+[logstash_servers]
+10.0.0.13
+
+[kibana_servers]
+10.0.0.13
