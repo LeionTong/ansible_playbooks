@@ -5,3 +5,4 @@ install_path: "{{ deploy_home }}/logstash"
 path_data: "{{ install_path }}/data"
 path_logs: "{{ install_path }}/logs"
 logstash_pipeline_conf: logstash-input-file-output-stdout.conf
+http_port: 9600
