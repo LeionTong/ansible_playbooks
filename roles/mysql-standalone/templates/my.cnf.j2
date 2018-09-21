@@ -15,6 +15,9 @@ symbolic-links=0
 # instructions in http://fedoraproject.org/wiki/Systemd
 character-set-server           = utf8
 collation_server               = utf8_general_ci
+long_query_time                = {{ long_query_time  }}
+slow_query_log                 = {{ slow_query_log }}
+slow_query_log_file            = {{ slow_query_log_file }}
 
 [mysqld_safe]
 log-error={{ log_error }}

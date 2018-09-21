@@ -32,7 +32,7 @@
   args:
     chdir: "{{ basedir }}"
   tags:
-    - config
+    - initialize
 
 - name: mysql start
   # shell: {{ basedir }}/bin/mysqld_safe  --defaults-file={{ basedir }}/my.cnf --user={{ user }} &

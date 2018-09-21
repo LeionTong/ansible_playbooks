@@ -9,5 +9,6 @@ mysql_port: 3306
 socket: "{{ install_path }}/mysql.sock"
 log_error: "{{ install_path }}/mysql-error.log"
 pid_file: "{{ install_path }}/mysql.pid"
+long_query_time: 0.1
 slow_query_log: 1
 slow_query_log_file: "{{ install_path }}/mysql-slow.log"
