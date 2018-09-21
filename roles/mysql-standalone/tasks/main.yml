@@ -1,0 +1,41 @@
+---
+- name: check if install_path directory exists
+  stat: path="{{ install_path }}"
+  register: logdir
+  changed_when: false
+  when: install_path != '""'
+
+- name: create install_path directory if it does not exist
+  file: path="{{ install_path }}" state=directory
+  when:
+    - install_path != '""'
+    - not logdir.stat.exists
+
+- name: install archive package
+  unarchive: src={{ mysql_package }} dest={{ install_path }}
+  tags:
+    - install
+
+- name: install configuration file
+  template: src=my.cnf.j2 dest={{ basedir }}/my.cnf
+  # notify: restart mysql
+  tags:
+    - config
+
+- name: install service start-stop-script
+  template: src=mysql.server.j2 dest={{ basedir }}/support-files/mysql.server
+  tags:
+    - config
+
+- name: mysql initialize
+  shell: bin/mysqld --defaults-file={{ basedir }}/my.cnf --initialize-insecure --user={{ user }}
+  args:
+    chdir: "{{ basedir }}"
+  tags:
+    - config
+
+- name: mysql start
+  # shell: {{ basedir }}/bin/mysqld_safe  --defaults-file={{ basedir }}/my.cnf --user={{ user }} &
+  shell: "{{ basedir }}/support-files/mysql.server start"
+  tags:
+    - start

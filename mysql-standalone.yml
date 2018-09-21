@@ -1,0 +1,11 @@
+---
+# - set_fact: user="{{ ansible_user_id }}"
+# - set_fact: group="{{ ansible_user_gid }}"
+
+- hosts: mysql_servers
+  remote_user: deploy
+  roles:
+  - mysql-standalone
+  vars:
+    - fixed:
+    - dynamic:

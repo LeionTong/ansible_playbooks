@@ -1,0 +1,2 @@
+[mysql_servers]
+10.0.0.13 ansible_user=deploy ansible_ssh_pass=deploy

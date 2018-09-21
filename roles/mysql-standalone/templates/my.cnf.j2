@@ -1,0 +1,26 @@
+[client]
+port={{ mysql_port }}
+socket={{ socket }}
+
+[mysqld]
+port={{ mysql_port }}
+basedir={{ basedir }}
+datadir={{ datadir }}
+socket={{ socket }}
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+# Settings user and group are ignored when systemd is used.
+# If you need to run mysqld under a different user or group,
+# customize your systemd unit file for mariadb according to the
+# instructions in http://fedoraproject.org/wiki/Systemd
+character-set-server           = utf8
+collation_server               = utf8_general_ci
+
+[mysqld_safe]
+log-error={{ log_error }}
+pid-file={{ pid_file }}
+
+#
+# include all files from the config directory
+#
+#!includedir /etc/my.cnf.d

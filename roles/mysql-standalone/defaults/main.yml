@@ -1,0 +1,13 @@
+mysql_package: mysql-5.7.23-el7-x86_64.tar.gz
+mysql_version: 5.7.23
+install_path: /home/deploy/mysql
+config_file: "{{ basedir }}/my.cnf"
+user: "{{ ansible_user_id }}"
+basedir: "{{ install_path }}/mysql-5.7.23-el7-x86_64"
+datadir: "{{ install_path }}/data"
+mysql_port: 3306
+socket: "{{ install_path }}/mysql.sock"
+log_error: "{{ install_path }}/mysql-error.log"
+pid_file: "{{ install_path }}/mysql.pid"
+slow_query_log: 1
+slow_query_log_file: "{{ install_path }}/mysql-slow.log"
