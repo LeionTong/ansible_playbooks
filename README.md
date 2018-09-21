@@ -84,3 +84,6 @@ requisition_precheck.yml
       wait_for: port={{ kibana_port }} timeout=1
       debug: msg=ok
 ```
+
+## Usage:
+ansible-playbook -u deploy -i kafka_hosts kafka.yml
