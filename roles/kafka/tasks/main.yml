@@ -15,7 +15,7 @@
 - name: create necessary catalog
   file: path={{ install_path }} state=directory
 
-- name: install kafka
+- name: install archive package
   unarchive: src={{ kafka_package }} dest={{ install_path }}
 
 - name: install configuration file
